@@ -10,28 +10,28 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
-	"regexp"
 	"fmt"
 	"log"
 	"net"
 	"os/exec"
+	"regexp"
 	"strings"
 	"time"
 	"unicode"
 )
 
 var (
-	rcptToRE = regexp.MustCompile(`[Tt][Oo]:<(.+)>`)
+	rcptToRE = regexp.MustCompile(`[Tt][Oo]:\s*<(.+)>`)
 	//mailFromRE = regexp.MustCompile(`(?i)^from:\s*<(.*?)>`)
-	mailFromRE = regexp.MustCompile(`[Ff][Rr][Oo][Mm]:<(.*)>`)
+	mailFromRE = regexp.MustCompile(`[Ff][Rr][Oo][Mm]:\s*<(.*)>`)
 )
 
 // Server is an SMTP server.
 type Server struct {
-	Addr         string // TCP address to listen on, ":25" if empty
-	Hostname     string // optional Hostname to announce; "" to use system hostname
-	ReadTimeout  time.Duration  // optional read timeout
-	WriteTimeout time.Duration  // optional write timeout
+	Addr         string        // TCP address to listen on, ":25" if empty
+	Hostname     string        // optional Hostname to announce; "" to use system hostname
+	ReadTimeout  time.Duration // optional read timeout
+	WriteTimeout time.Duration // optional write timeout
 
 	PlainAuth bool // advertise plain auth (assumes you're on SSL)
 
@@ -44,7 +44,7 @@ type Server struct {
 	OnNewMail func(c Connection, from MailAddress) (Envelope, error)
 }
 
-// MailAddress is defined by 
+// MailAddress is defined by
 type MailAddress interface {
 	Email() string    // email address, as provided
 	Hostname() string // canonical hostname, lowercase
@@ -261,7 +261,7 @@ func (s *session) handleHello(greeting, host string) {
 func (s *session) handleMailFrom(email string) {
 	// TODO: 4.1.1.11.  If the server SMTP does not recognize or
 	// cannot implement one or more of the parameters associated
-	// qwith a particular MAIL FROM or RCPT TO command, it will return
+	// with a particular MAIL FROM or RCPT TO command, it will return
 	// code 555.
 
 	if s.env != nil {
